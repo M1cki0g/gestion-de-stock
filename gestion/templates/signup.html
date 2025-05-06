@@ -1,0 +1,57 @@
+{% block content %}
+<div class="col-md-6 right-box">
+    <div class="row align-items-center">
+        <div class="header-text mb-4">
+            <h2>Create Account</h2>
+        </div>
+        <form method="post">
+            {% csrf_token %}
+            <div class="input-group mb-3">
+                <p>Username</p>
+                {{ form.username }}
+                {{ form.username.errors }}
+            </div>
+            <div class="input-group mb-3">
+                <p>Email</p>
+                {{ form.email }}
+                {{ form.email.errors }}
+            </div>
+            <div class="input-group mb-3">
+                <p>First Name</p>
+                {{ form.first_name }}
+                {{ form.first_name.errors }}
+            </div>
+            <div class="input-group mb-3">
+                <p>Last Name</p>
+                {{ form.last_name }}
+                {{ form.last_name.errors }}
+            </div>
+            <div class="input-group mb-3">
+                <p>Password</p>
+                {{ form.password1 }}
+                {{ form.password1.errors }}
+            </div>
+            <div class="input-group mb-3">
+                <p>Confirm password</p>
+                {{ form.password2 }}
+                {{ form.password2.errors }}
+            </div>
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+            <div class="input-group mb-3">
+                <button type="submit" class="btn btn-lg btn-primary w-100 fs-6">
+                    Sign Up
+                </button>
+            </div>
+        </form>
+        <div class="row">
+            <small>Already have an account? <a href="{% url 'login' %}">Login</a></small>
+        </div>
+    </div>
+</div>
+{% endblock %}
