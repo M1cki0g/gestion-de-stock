@@ -1,0 +1,67 @@
+{% block content %}
+<div class="container mt-5">
+    <h2>Liste des produits</h2>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nom</th>
+                <th>Quantité</th>
+                <th>Catégorie</th>
+                <th>Description</th>
+                <th>Image</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for prd in produits %}
+            <tr>
+                <td>{{ prd.id }}</td>
+                <td>{{ prd.nom_produit }}</td>
+                <td>{{ prd.quantite }}</td>
+                <td>{{ prd.categorie }}</td>
+                <td>{{ prd.description }}</td>
+                <td>
+                    {% if prd.image %}
+                        <img src="{{ prd.image.url }}" alt="{{ prd.nom_produit }}" style="max-width: 50px;">
+                    {% else %}
+                        No image
+                    {% endif %}
+                </td>
+                <td>    
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="7" class="text-center">Aucun produit trouvé</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<style>
+    .table {
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    
+    .table th {
+        background-color: #4e73df;
+        color: white;
+        font-weight: 500;
+    }
+    
+    .table td, .table th {
+        vertical-align: middle;
+        padding: 12px;
+    }
+    
+    .btn {
+        padding: 5px 10px;
+        margin: 0 2px;
+    }
+</style>
+{% endblock content %}
+
