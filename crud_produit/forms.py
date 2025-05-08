@@ -4,28 +4,6 @@ from django import forms
 # from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 
-# class SignUpForm(UserCreationForm):
-#     class Meta:
-#         model = User
-#         fields = ('username', 'password1', 'password2')
-
-#     def __init__(self, *args, **kwargs):
-#         super().__init__(*args, **kwargs)
-#         # Personnalisation des champs du formulaire
-#         self.fields['username'].widget.attrs.update({
-#             'class': 'form-control',
-#             'placeholder': 'Entrez votre nom d\'utilisateur'
-#         })
-#         self.fields['password1'].widget.attrs.update({
-#             'class': 'form-control',
-#             'placeholder': 'Entrez votre mot de passe'
-#         })
-#         self.fields['password2'].widget.attrs.update({
-#             'class': 'form-control',
-#             'placeholder': 'Confirmez votre mot de passe'
-#         })
-
-
 
 class gestionProduct(forms.Form):
     nom_produit = forms.CharField(
@@ -82,3 +60,20 @@ class CategorieForm(forms.ModelForm):
             })
             }
         
+class Modifier_prd(forms.ModelForm):
+    class Meta:
+        model = Produit
+        fields = ['nom_produit', 'categorie', 'quantite', 'image', 'description']
+        widgets = {
+            'nom_produit': forms.TextInput(attrs={'class': 'form-control'}),
+            'categorie': forms.Select(attrs={'class': 'form-control'}),
+            'quantite': forms.NumberInput(attrs={'class': 'form-control'}),
+            'image': forms.FileInput(attrs={'class': 'form-control'}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 4}),
+        }
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)  # Récupérer l'utilisateur depuis les arguments
+        super().__init__(*args, **kwargs)
+        if user:
+            # Filtrer les catégories pour n'afficher que celles créées par l'utilisateur
+            self.fields['categorie'].queryset = Categorie.objects.filter(user=user)

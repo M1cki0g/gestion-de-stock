@@ -4,6 +4,9 @@ from django.contrib.auth.decorators import login_required
 from .forms import gestionProduct
 from django.contrib import messages
 from .forms import CategorieForm
+from .forms import Modifier_prd
+from django.shortcuts import get_object_or_404
+
 @login_required
 def ajouter_produit(request):
     if request.method == 'POST':
@@ -46,3 +49,23 @@ def creer_categorie(request):
     else:
         form = CategorieForm()
     return render(request, 'creer_categorie.html', {'form': form})
+
+def modifier_produit(request, produit_id):
+    produit = get_object_or_404(Produit, id=produit_id)
+
+    if request.method == 'POST':
+        form = Modifier_prd(request.POST, request.FILES, instance=produit)
+        if form.is_valid():
+            form.save()
+            return redirect('list_produit')
+    else:
+        form = Modifier_prd(instance=produit, user=request.user)
+
+    return render(request, 'modifier_prd.html', {'form': form})
+
+def supprimer_produit(request, produit_id):
+    produit = get_object_or_404(Produit, id=produit_id)
+    if request.method == 'POST':
+        produit.delete()
+        return redirect('list_produit')
+    return redirect('list_produit')
