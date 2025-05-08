@@ -1,57 +1,189 @@
+{% extends 'base.html' %}
+
 {% block content %}
-<div class="col-md-6 right-box">
-    <div class="row align-items-center">
-        <div class="header-text mb-4">
-            <h2>Create Account</h2>
-        </div>
-        <form method="post">
-            {% csrf_token %}
-            <div class="input-group mb-3">
-                <p>Username</p>
-                {{ form.username }}
-                {{ form.username.errors }}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white text-center">
+                    <h4 class="mb-0">Créer un compte</h4>
+                    <p class="text-white-50 mb-0">Rejoignez-nous pour gérer votre inventaire</p>
+                </div>
+                <div class="card-body p-4">
+                    <form method="post" class="needs-validation" novalidate>
+                        {% csrf_token %}
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Nom d'utilisateur</label>
+                            {{ form.username }}
+                            {% if form.username.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.username.errors|join:", " }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            {{ form.email }}
+                            {% if form.email.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.email.errors|join:", " }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Prénom</label>
+                            {{ form.first_name }}
+                            {% if form.first_name.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.first_name.errors|join:", " }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Nom</label>
+                            {{ form.last_name }}
+                            {% if form.last_name.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.last_name.errors|join:", " }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Mot de passe</label>
+                            {{ form.password1 }}
+                            {% if form.password1.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.password1.errors|join:", " }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label">Confirmer le mot de passe</label>
+                            {{ form.password2 }}
+                            {% if form.password2.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.password2.errors|join:", " }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        {% if messages %}
+                            {% for message in messages %}
+                                <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
+                                    {{ message }}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-user-plus me-2"></i>S'inscrire
+                            </button>
+                            <a href="{% url 'login' %}" class="btn btn-outline-secondary">
+                                <i class="fas fa-arrow-left me-2"></i>Retour à la connexion
+                            </a>
+                        </div>
+
+                        <div class="text-center mt-4">
+                            <span class="text-muted">Déjà inscrit?</span>
+                            <a href="{% url 'login' %}" class="text-primary text-decoration-none ms-1">Se connecter</a>
+                        </div>
+                    </form>
+                </div>
             </div>
-            <div class="input-group mb-3">
-                <p>Email</p>
-                {{ form.email }}
-                {{ form.email.errors }}
-            </div>
-            <div class="input-group mb-3">
-                <p>First Name</p>
-                {{ form.first_name }}
-                {{ form.first_name.errors }}
-            </div>
-            <div class="input-group mb-3">
-                <p>Last Name</p>
-                {{ form.last_name }}
-                {{ form.last_name.errors }}
-            </div>
-            <div class="input-group mb-3">
-                <p>Password</p>
-                {{ form.password1 }}
-                {{ form.password1.errors }}
-            </div>
-            <div class="input-group mb-3">
-                <p>Confirm password</p>
-                {{ form.password2 }}
-                {{ form.password2.errors }}
-            </div>
-            {% if messages %}
-                {% for message in messages %}
-                    <div class="alert alert-{{ message.tags }}">
-                        {{ message }}
-                    </div>
-                {% endfor %}
-            {% endif %}
-            <div class="input-group mb-3">
-                <button type="submit" class="btn btn-lg btn-primary w-100 fs-6">
-                    Sign Up
-                </button>
-            </div>
-        </form>
-        <div class="row">
-            <small>Already have an account? <a href="{% url 'login' %}">Login</a></small>
         </div>
     </div>
 </div>
+
+<style>
+    .card {
+        border: none;
+        border-radius: 15px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 0.5rem 2rem rgba(0, 0, 0, 0.15);
+    }
+
+    .card-header {
+        background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+        padding: 1.5rem;
+        border-bottom: none;
+    }
+
+    .form-label {
+        font-weight: 500;
+        color: #444;
+        margin-bottom: 0.5rem;
+    }
+
+    .form-control {
+        border-radius: 8px;
+        padding: 0.75rem;
+        border: 2px solid #e0e0e0;
+        transition: all 0.3s ease;
+    }
+
+    .form-control:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25);
+        transform: translateY(-2px);
+    }
+
+    .btn {
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+    .btn-primary {
+        background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+        border: none;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(78, 115, 223, 0.3);
+    }
+
+    .alert {
+        border-radius: 8px;
+        border: none;
+        animation: slideIn 0.3s ease-out;
+    }
+
+    @keyframes slideIn {
+        from { transform: translateY(-10px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+    }
+
+    .text-primary {
+        color: var(--primary-color) !important;
+    }
+
+    .form-text ul {
+        margin-top: 0.5rem;
+    }
+
+    .form-text ul li {
+        margin-bottom: 0.25rem;
+    }
+
+    .invalid-feedback {
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+        color: var(--danger-color);
+    }
+</style>
 {% endblock %}

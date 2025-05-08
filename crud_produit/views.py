@@ -1,33 +1,48 @@
 from django.shortcuts import render, redirect
-from .models import produit
+from .models import Produit, Categorie
 from django.contrib.auth.decorators import login_required
 from .forms import gestionProduct
 from django.contrib import messages
-
+from .forms import CategorieForm
 @login_required
 def ajouter_produit(request):
     if request.method == 'POST':
-        form = gestionProduct(request.POST, request.FILES)
+        form = gestionProduct(request.POST, request.FILES, user=request.user)
         if form.is_valid():
-            nom_produit = form.cleaned_data['nom_produit']
             categorie = form.cleaned_data['categorie']
-            quantite = form.cleaned_data['quantite']
-            description = form.cleaned_data['description']
-            image = form.cleaned_data.get('image')
-            
-            
-            product = produit.objects.create(
-                    nom_produit=nom_produit,
-                    categorie=categorie,
-                    quantite=quantite,
-                    description=description,
-                    image=image
-                )
+            Produit.objects.create(
+                user=request.user,
+                nom_produit=form.cleaned_data['nom_produit'],
+                categorie=categorie,
+                quantite=form.cleaned_data['quantite'],
+                description=form.cleaned_data['description'],
+                image=form.cleaned_data.get('image')
+            )
+            messages.success(request, 'Produit ajouté avec succès!')
             return redirect('list_produit')
     else:
-        form = gestionProduct()
+        form = gestionProduct(user=request.user)
     return render(request, 'ajouter_prd.html', {'form': form})
 
+@login_required
 def list_product(request):
-    produits = produit.objects.all()
+    produits = Produit.objects.filter(user=request.user)
     return render(request, 'list_prd.html', {'produits': produits})
+
+@login_required
+def creer_categorie(request):
+    if request.method == 'POST':
+        form = CategorieForm(request.POST)
+        if form.is_valid():
+            nom_categorie = form.cleaned_data['nom']
+
+            if Categorie.objects.filter(nom=nom_categorie, user=request.user).exists():
+                messages.error(request, "Cette catégorie existe déjà.")
+                redirect('creer_categorie')
+            
+            else:
+                Categorie.objects.create(user=request.user, nom=nom_categorie)
+            return redirect('creer_categorie')
+    else:
+        form = CategorieForm()
+    return render(request, 'creer_categorie.html', {'form': form})

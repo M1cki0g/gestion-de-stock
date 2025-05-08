@@ -8,7 +8,8 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('ajouter_produit/', views.ajouter_produit, name='ajouter_produit'),  
-     path('list_produit/', views.list_product, name='list_produit'), 
+    path('list_produit/', views.list_product, name='list_produit'),
+    path('creer_categorie/', views.creer_categorie, name='creer_categorie'),
 
 ]
 if settings.DEBUG:

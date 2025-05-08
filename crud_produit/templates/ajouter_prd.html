@@ -1,53 +1,104 @@
+{% extends 'base.html' %}
+
 {% block content %}
-<div class="container mt-4">
-    <div class="card shadow">
-        <div class="card-header bg-primary text-white">
-            <h4 class="mb-0">Ajouter un nouveau produit</h4>
-        </div>
-        <div class="card-body">
-            <form method="post" enctype="multipart/form-data">
-                {% csrf_token %}
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label">Nom du produit</label>
-                        {{ form.nom_produit }}
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label">Catégorie</label>
-                        {{ form.categorie }}
-                    </div>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0">Ajouter un nouveau produit</h4>
+                    <a href="{% url 'list_produit' %}" class="btn btn-light btn-sm">
+                        <i class="fas fa-arrow-left me-1"></i> Retour à la liste
+                    </a>
                 </div>
+                <div class="card-body p-4">
+                    <form method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+                        {% csrf_token %}
+                        
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label">Nom du produit</label>
+                                    {{ form.nom_produit }}
+                                    {% if form.nom_produit.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {{ form.nom_produit.errors|join:", " }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label">Catégorie</label>
+                                    {{ form.categorie }}
+                                    <div class="form-text">
+                                        <a href="{% url 'creer_categorie' %}" class="text-primary text-decoration-none">
+                                            <i class="fas fa-plus-circle"></i> Créer une nouvelle catégorie
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
 
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label">Quantité</label>
-                        {{ form.quantite }}
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label">Image</label>
-                        {{ form.image }}
-                    </div>
-                </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label">Quantité</label>
+                                    {{ form.quantite }}
+                                    {% if form.quantite.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {{ form.quantite.errors|join:", " }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
 
-                <div class="mb-3">
-                    <label class="form-label">Description</label>
-                    {{ form.description }}
-                </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label">Image du produit</label>
+                                    <div class="custom-file-input">
+                                        {{ form.image }}
+                                    </div>
+                                    {% if form.image.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {{ form.image.errors|join:", " }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
 
-                {% if messages %}
-                    {% for message in messages %}
-                        <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
-                            {{ message }}
-                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label class="form-label">Description</label>
+                                    {{ form.description }}
+                                    {% if form.description.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {{ form.description.errors|join:", " }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
                         </div>
-                    {% endfor %}
-                {% endif %}
 
-                <div class="d-grid gap-2">
-                    <button type="submit" class="btn btn-primary">Ajouter le produit</button>
-                    <a href="{% url 'home' %}" class="btn btn-outline-secondary">Annuler</a>
+                        {% if messages %}
+                            {% for message in messages %}
+                                <div class="alert alert-{{ message.tags }} alert-dismissible fade show mt-3">
+                                    {{ message }}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-2"></i>Ajouter le produit
+                            </button>
+                            <a href="{% url 'list_produit' %}" class="btn btn-outline-secondary">
+                                <i class="fas fa-times me-2"></i>Annuler
+                            </a>
+                        </div>
+                    </form>
                 </div>
-            </form>
+            </div>
         </div>
     </div>
 </div>
@@ -56,46 +107,86 @@
     .card {
         border: none;
         border-radius: 15px;
-        box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+        overflow: hidden;
+        transition: all 0.3s ease;
     }
-    
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 0.5rem 2rem rgba(0, 0, 0, 0.15);
+    }
+
     .card-header {
-        border-radius: 15px 15px 0 0 !important;
+        background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
         padding: 1.5rem;
+        border-bottom: none;
     }
-    
+
     .form-label {
         font-weight: 500;
-        color: #333;
+        color: #444;
+        margin-bottom: 0.5rem;
     }
-    
+
     .form-control {
         border-radius: 8px;
         padding: 0.75rem;
-        border: 1px solid #e0e0e0;
+        border: 2px solid #e0e0e0;
+        transition: all 0.3s ease;
     }
-    
+
     .form-control:focus {
-        border-color: #4e73df;
+        border-color: var(--primary-color);
         box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25);
+        transform: translateY(-2px);
     }
-    
+
     .btn {
-        padding: 0.75rem;
+        padding: 0.75rem 1.5rem;
         border-radius: 8px;
-        font-weight: 600;
+        font-weight: 500;
+        transition: all 0.3s ease;
     }
-    
+
     .btn-primary {
-        background: linear-gradient(to right, #4e73df, #224abe);
+        background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
         border: none;
-        transition: all 0.3s;
     }
-    
+
     .btn-primary:hover {
-        background: linear-gradient(to right, #224abe, #4e73df);
-        transform: translateY(-1px);
+        transform: translateY(-2px);
         box-shadow: 0 5px 15px rgba(78, 115, 223, 0.3);
+    }
+
+    .custom-file-input input[type="file"] {
+        padding: 0.5rem;
+    }
+
+    .alert {
+        border-radius: 8px;
+        border: none;
+    }
+
+    .form-text {
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+    }
+
+    .form-text a:hover {
+        text-decoration: underline !important;
+    }
+
+    textarea.form-control {
+        min-height: 120px;
+    }
+
+    .btn-light {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .btn-light:hover {
+        background: rgba(255, 255, 255, 0.2);
     }
 </style>
 {% endblock %}

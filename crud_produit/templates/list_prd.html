@@ -1,67 +1,139 @@
+{% extends 'base.html' %}
+
 {% block content %}
-<div class="container mt-5">
-    <h2>Liste des produits</h2>
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Nom</th>
-                <th>Quantité</th>
-                <th>Catégorie</th>
-                <th>Description</th>
-                <th>Image</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for prd in produits %}
-            <tr>
-                <td>{{ prd.id }}</td>
-                <td>{{ prd.nom_produit }}</td>
-                <td>{{ prd.quantite }}</td>
-                <td>{{ prd.categorie }}</td>
-                <td>{{ prd.description }}</td>
-                <td>
-                    {% if prd.image %}
-                        <img src="{{ prd.image.url }}" alt="{{ prd.nom_produit }}" style="max-width: 50px;">
-                    {% else %}
-                        No image
-                    {% endif %}
-                </td>
-                <td>    
-                </td>
-            </tr>
-            {% empty %}
-            <tr>
-                <td colspan="7" class="text-center">Aucun produit trouvé</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+<div class="container">
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <h4 class="mb-0">Liste des produits</h4>
+            <a href="{% url 'ajouter_produit' %}" class="btn btn-light">
+                <i class="fas fa-plus"></i> Ajouter un produit
+            </a>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Image</th>
+                            <th>Nom</th>
+                            <th>Catégorie</th>
+                            <th>Quantité</th>
+                            <th>Description</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for prd in produits %}
+                        <tr>
+                            <td>{{ prd.id }}</td>
+                            <td>
+                                {% if prd.image %}
+                                    <img src="{{ prd.image.url }}" alt="{{ prd.nom_produit }}" 
+                                         class="product-thumbnail">
+                                {% else %}
+                                    <div class="no-image">No image</div>
+                                {% endif %}
+                            </td>
+                            <td>{{ prd.nom_produit }}</td>
+                            <td>
+                                {% if prd.categorie %}
+                                    <span class="badge bg-info">{{ prd.categorie }}</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">Sans catégorie</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <span class="badge bg-{% if prd.quantite > 10 %}success{% elif prd.quantite > 0 %}warning{% else %}danger{% endif %}">
+                                    {{ prd.quantite }}
+                                </span>
+                            </td>
+                            <td>{{ prd.description|truncatechars:50 }}</td>
+                            <td>
+                                <div class="btn-group">
+                                    <a href="#" class="btn btn-sm btn-outline-primary">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a href="#" class="btn btn-sm btn-outline-danger">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="7" class="text-center py-4">
+                                <div class="empty-state">
+                                    <i class="fas fa-box fa-3x mb-3"></i>
+                                    <h5>Aucun produit trouvé</h5>
+                                    <p class="text-muted">Commencez par ajouter votre premier produit</p>
+                                    <a href="{% url 'ajouter_produit' %}" class="btn btn-primary">
+                                        Ajouter un produit
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </div>
 
 <style>
-    .table {
-        background-color: white;
+    .product-thumbnail {
+        width: 50px;
+        height: 50px;
+        object-fit: cover;
         border-radius: 8px;
-        box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
-    
+
+    .no-image {
+        width: 50px;
+        height: 50px;
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.8rem;
+        color: #6c757d;
+    }
+
     .table th {
-        background-color: #4e73df;
-        color: white;
+        background-color: #f8f9fa;
+        font-weight: 600;
+        border-top: none;
+    }
+
+    .table td {
+        vertical-align: middle;
+    }
+
+    .badge {
+        padding: 0.5em 0.8em;
         font-weight: 500;
     }
-    
-    .table td, .table th {
-        vertical-align: middle;
-        padding: 12px;
+
+    .empty-state {
+        padding: 2rem;
+        text-align: center;
+        color: #6c757d;
     }
-    
-    .btn {
-        padding: 5px 10px;
-        margin: 0 2px;
+
+    .btn-group .btn {
+        padding: 0.25rem 0.5rem;
+    }
+
+    .card {
+        border-radius: 15px;
+        overflow: hidden;
+    }
+
+    .card-header {
+        background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+        padding: 1.5rem;
     }
 </style>
-{% endblock content %}
-
+{% endblock %}

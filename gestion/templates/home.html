@@ -1,3 +1,38 @@
-<h1>HOOOOOME PAAAGE</h1>
- <a href="{% url 'list_produit' %}">List produit</a><br>
- <a href="{% url 'ajouter_produit' %}">Ajouter produit</a>
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8 text-center">
+        <h1 class="display-4 mb-4">Bienvenue sur Gestion de Stock</h1>
+        <p class="lead mb-5">Gérez votre inventaire efficacement avec notre solution simple et intuitive.</p>
+        
+        {% if user.is_authenticated %}
+            <div class="row justify-content-center g-4">
+                <div class="col-md-4">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <h3 class="card-title">Produits</h3>
+                            <p class="card-text">Consultez et gérez vos produits</p>
+                            <a href="{% url 'list_produit' %}" class="btn btn-primary">Voir les produits</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <h3 class="card-title">Catégories</h3>
+                            <p class="card-text">Gérez vos catégories de produits</p>
+                            <a href="{% url 'creer_categorie' %}" class="btn btn-primary">Gérer les catégories</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <div class="d-grid gap-3 col-md-6 mx-auto">
+                <a href="{% url 'login' %}" class="btn btn-primary btn-lg">Se connecter</a>
+                <a href="{% url 'signup' %}" class="btn btn-outline-primary btn-lg">S'inscrire</a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
