@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import Produit, Categorie
+from .models import Produit, Categorie, Transaction
 from django.contrib.auth.decorators import login_required
 from .forms import gestionProduct
 from django.contrib import messages
@@ -81,16 +81,33 @@ def creer_categorie(request):
 
 def modifier_produit(request, produit_id):
     produit = get_object_or_404(Produit, id=produit_id)
-
+    old_quantite = produit.quantite
     if request.method == 'POST':
         form = Modifier_prd(request.POST, request.FILES, instance=produit)
         if form.is_valid():
-            form.save()
-            return redirect('list_produit')
+            updated_produit = form.save(commit=False)
+            new_quantite = updated_produit.quantite
+            
+            if new_quantite != old_quantite:
+                change = new_quantite - old_quantite
+                Transaction.objects.create(
+                    produit=produit,
+                    user=request.user,
+                    change=change
+                )
+                updated_produit.save()
+                redirect('list_produit')
+                
     else:
         form = Modifier_prd(instance=produit, user=request.user)
 
     return render(request, 'modifier_prd.html', {'form': form})
+
+
+@login_required
+def transaction_list(request):
+    transactions = Transaction.objects.filter(user=request.user).order_by('-date')
+    return render(request, 'transaction.html', {'transactions': transactions})
 
 def modifier_cat(request,cat_id):
     categorie=get_object_or_404(Categorie,id=cat_id)
@@ -123,3 +140,10 @@ def supprimer_cat(request, cat_id):
         categorie.delete()
         return redirect('list_categorie')
     return redirect('list_categorie')
+
+def clear_transaction(request):
+    # transaction = get_object_or_404(Transaction, id=transaction_id)
+    if request.method == 'POST':
+        Transaction.objects.filter(user=request.user).delete()
+        return redirect('transaction_list')
+    return redirect('transaction_list')

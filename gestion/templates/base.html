@@ -125,14 +125,19 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'list_produit' %}">List Produits</a>
                         </li>
-                       
         
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'list_categorie' %}">Catégories</a>
                         </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'transaction_list' %}">Historique</a>
+                        </li>
+
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'logout' %}">Déconnexion</a>
                         </li>
+
                     {% else %}
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'login' %}">Connexion</a>
@@ -140,6 +145,7 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'signup' %}">Inscription</a>
                         </li>
+                        
                     {% endif %}
                 </ul>
             </div>

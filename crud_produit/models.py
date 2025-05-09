@@ -23,18 +23,9 @@ class Categorie(models.Model):
     def get_nb_products(self):
         return self.produit_set.count() 
 
+
+
 class Produit(models.Model):
-    # x=[
-    #     ('Electroménager', 'Electroménager'),
-    #     ('Vêtements', 'Vêtements'),
-    #     ('Meubles', 'Meubles'),
-    #     ('Jouets', 'Jouets'),
-    #     ('Livres', 'Livres'),
-    #     ('Informatique', 'Informatique'),
-    #     ('Sport', 'Sport'),
-    #     ('Auto-Moto', 'Auto-Moto'),
-    #     ('Autre', 'Autre')
-    # ]
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     nom_produit=models.CharField(max_length=100)
     categorie = models.ForeignKey(Categorie, on_delete=models.SET_NULL, null=True, blank=True) 
@@ -42,4 +33,14 @@ class Produit(models.Model):
     image=models.ImageField(upload_to=file_path, blank=True, null=True)
     description = models.TextField(blank=True)
     date_ajout = models.DateTimeField(auto_now_add=True)
+
+
+class Transaction(models.Model):
+    produit = models.ForeignKey(Produit, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    change = models.IntegerField()  
+    date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.produit.nom_produit} ({'+' if self.change > 0 else ''}{self.change})"
  
