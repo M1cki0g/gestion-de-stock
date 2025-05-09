@@ -15,6 +15,7 @@ def file_path(instance, filename):
 class Categorie(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     nom = models.CharField(max_length=100)
+    nb_products = models.IntegerField(default=0)
 
     def __str__(self):
         return self.nom
@@ -38,3 +39,4 @@ class Produit(models.Model):
     image=models.ImageField(upload_to=file_path, blank=True, null=True)
     description = models.TextField(blank=True)
     date_ajout = models.DateTimeField(auto_now_add=True)
+ 

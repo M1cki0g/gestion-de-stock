@@ -60,6 +60,7 @@ class CategorieForm(forms.ModelForm):
             })
             }
         
+        
 class Modifier_prd(forms.ModelForm):
     class Meta:
         model = Produit
