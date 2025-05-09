@@ -5,9 +5,21 @@
     <div class="card shadow-sm mb-4">
         <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
             <h4 class="mb-0">Liste des produits</h4>
-            <a href="{% url 'ajouter_produit' %}" class="btn btn-light">
-                <i class="fas fa-plus"></i> Ajouter un produit
-            </a>
+            <div class="d-flex gap-2">
+                <form method="get" class="d-flex align-items-center">
+                    <select name="categorie" class="form-select me-2" onchange="this.form.submit()">
+                        <option value="">Toutes les catégories</option>
+                        {% for cat in categories %}
+                            <option value="{{ cat.id }}" {% if categorie_selectionnee|stringformat:"s" == cat.id|stringformat:"s" %}selected{% endif %}>
+                                {{ cat.nom }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </form>
+                <a href="{% url 'ajouter_produit' %}" class="btn btn-light">
+                    <i class="fas fa-plus"></i> Ajouter un produit
+                </a>
+            </div>
         </div>
         <div class="card-body p-0">
             <div class="table-responsive">

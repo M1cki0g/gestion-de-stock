@@ -1,4 +1,3 @@
-
 from django.shortcuts import render, redirect
 from .models import Produit, Categorie
 from django.contrib.auth.decorators import login_required
@@ -34,9 +33,19 @@ def ajouter_produit(request):
 
 @login_required
 def list_product(request):
+    categorie_id = request.GET.get('categorie')
     produits = Produit.objects.filter(user=request.user)
-    return render(request, 'list_prd.html', {'produits': produits})
-
+    categories = Categorie.objects.filter(user=request.user)
+    
+    if categorie_id:
+        produits = produits.filter(categorie_id=categorie_id)
+    
+    context = {
+        'produits': produits,
+        'categories': categories,
+        'categorie_selectionnee': categorie_id
+    }
+    return render(request, 'list_prd.html', context)
 
 
 
