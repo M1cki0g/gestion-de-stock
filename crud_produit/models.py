@@ -15,10 +15,13 @@ def file_path(instance, filename):
 class Categorie(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     nom = models.CharField(max_length=100)
-    nb_products = models.IntegerField(default=0)
+    # nb_products = models.IntegerField(default=0)
 
     def __str__(self):
         return self.nom
+    
+    def get_nb_products(self):
+        return self.produit_set.count() 
 
 class Produit(models.Model):
     # x=[

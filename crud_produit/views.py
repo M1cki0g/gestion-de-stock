@@ -21,7 +21,7 @@ def ajouter_produit(request):
                 description=form.cleaned_data['description'],
                 image=form.cleaned_data.get('image')
             )
-            categorie.nb_products += 1
+            # categorie.nb_products += 1
             categorie.save()
             messages.success(request, 'Produit ajouté avec succès!')
             return redirect('list_produit')
@@ -110,7 +110,7 @@ def modifier_cat(request,cat_id):
 def supprimer_produit(request, produit_id):
     produit = get_object_or_404(Produit, id=produit_id)
     if request.method == 'POST':
-        produit.categorie.nb_products -= 1
+        # produit.categorie.nb_products -= 1
         produit.categorie.save()
         produit.delete()
         return redirect('list_produit')
